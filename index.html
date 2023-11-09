@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Creación y Envío de Cuentas de WhatsApp</title>
+    <style>
+        /* Estilos CSS para el contenido */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #ff6600;
+        }
+        p {
+            color: #333333;
+        }
+        .button {
+            display: inline-block;
+            background-color: #ff6600;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+    <script src="app.js"></script> <!-- Enlace al archivo app.js -->
+</head>
+<body>
+    <div class="container">
+        <h1>Creación y Envío de Cuentas de WhatsApp</h1>
+        <p>A continuación, se muestran los enlaces a las 10 cuentas de WhatsApp Business creadas:</p>
+        <ul id="accountsList"></ul>
+
+        <hr>
+
+        <p>Ingresa el mensaje que deseas enviar desde todas las cuentas:</p>
+        <form id="messageForm">
+            <label for="message">Mensaje:</label>
+            <input type="text" id="message" name="message" required><br><br>
+            
+            <input type="submit" value="Enviar Mensaje" class="button">
+        </form>
+
+        <div id="confirmation"></div>
+    </div>
+
+    <script>
+        var accounts = []; // Array para almacenar los objetos de las cuentas de WhatsApp
+
+        // Crear 10 cuentas ficticias de WhatsApp Business
+        for (var i = 1; i <= 10; i++) {
+            var account = {
+                name: "Cuenta " + i,
+                phone: "+1415555" + i.toString().padStart(4, "0")
+            };
+            accounts.push(account);
+
+            // Agregar enlace a la lista de cuentas
+            var link = document.createElement("a");
+            link.href = "https://wa.me/" + account.phone;
+            link.target = "_blank";
+            link.textContent = account.name + " (" + account.phone + ")";
+            var listItem = document.createElement("li");
+            listItem.appendChild(link);
+            document.getElementById("accountsList").appendChild(listItem);
+        }
+
+        // Capturar el evento de envío del formulario de mensajes
+        document.getElementById("messageForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Evitar el envío del formulario
+
+            var message = document.getElementById("message").value;
+
+            // Enviar el mensaje desde cada cuenta
+            for (var i = 0; i < accounts.length; i++) {
+                var account = accounts[i];
+                var url = "https://api.whatsapp.com/send?phone=" + account.phone + "&text=" + encodeURIComponent(message);
+                var win = window.open(url, "_blank");
+                win.focus();
+            }
+
+            // Mostrar la confirmación
+            document.getElementById("confirmation").textContent = "Mensaje enviado desde todas las cuentas.";
+        });
+    </script>
+</body>
+</html>
